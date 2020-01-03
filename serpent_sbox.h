@@ -4,7 +4,7 @@
 
 #define WITH_SERPENT_FAST_SBOX
 
-const quint16 serpent_sbox_fast_data[] = {
+const uint16_t serpent_sbox_fast_data[] = {
 
 // SBOX: 0 , 0000-FF00
   /* *** 0 - 63 *** */

@@ -27,11 +27,10 @@
 
 #include "simpleqtcryptor.h"
 
-class QString;
-class QFile;
-class QByteArray;
-#include <QSharedPointer>
-
+#include <fstream>
+#include <memory>
+#include <string>
+#include <vector>
 
 namespace SimpleQtCryptor {
 
@@ -41,39 +40,39 @@ public:
     SelfTest();
     ~SelfTest();
 
-    bool test(QByteArray &testdata, QString *outmsg);
-    bool test(QByteArray &testdata, QFile *outmsg);
+    bool test(std::vector<uint8_t> &testdata, std::string *outmsg);
+    bool test(std::vector<uint8_t> &testdata, std::ostream *outmsg);
 
 private:
-    QString *outString;
-    QFile *outFile;
+    std::string *outString;
+    std::ostream *outFile;
 
-    void print(QString line);
+    void print(std::string line);
 
-    bool test(QByteArray &testdata);
+    bool test(std::vector<uint8_t> &testdata);
 
 // RC5 tests
-    bool test_key_zero_expand(QSharedPointer<SimpleQtCryptor::Key> k);
-    bool test_key_zero_s32(QSharedPointer<SimpleQtCryptor::Key> k);
-    bool test_key_zero_s64(QSharedPointer<SimpleQtCryptor::Key> k);
-    bool test_rc5_32_encrypt_8b(QSharedPointer<SimpleQtCryptor::Key> k, const uchar* data, int expect);
-    bool test_rc5_64_encrypt_16b(QSharedPointer<SimpleQtCryptor::Key> k, const uchar* data, int expect);
-    bool test_rc5_32_decrypt_8b(QSharedPointer<SimpleQtCryptor::Key> k, const uchar* data, int expect);
-    bool test_rc5_64_decrypt_16b(QSharedPointer<SimpleQtCryptor::Key> k, const uchar* data, int expect);
-    bool test_rc5_32_encrypt_decrypt_8b(QSharedPointer<SimpleQtCryptor::Key> k, const uchar* data);
-    bool test_rc5_64_encrypt_decrypt_16b(QSharedPointer<SimpleQtCryptor::Key> k, const uchar* data);
-    bool test2_CBC_encrypt_decrypt(QSharedPointer<SimpleQtCryptor::Key> k, const QByteArray &data, SimpleQtCryptor::Algorithm a);
-    bool test2_CFB_encrypt_decrypt(QSharedPointer<SimpleQtCryptor::Key> k, const QByteArray &data, SimpleQtCryptor::Algorithm a);
-    bool test2_encrypt_decrypt_pieceByPiece(QSharedPointer<SimpleQtCryptor::Key> k, const QByteArray &data, SimpleQtCryptor::Algorithm a, SimpleQtCryptor::Mode m);
-    bool test3_encrypt_decrypt(QSharedPointer<SimpleQtCryptor::Key> k, const QByteArray &data, SimpleQtCryptor::Algorithm a, SimpleQtCryptor::Mode m);
-    bool test3_decryptorwiz(QSharedPointer<SimpleQtCryptor::Key> *kl, int kc, const QByteArray &data, SimpleQtCryptor::Algorithm a, SimpleQtCryptor::Mode m);
+    bool test_key_zero_expand(std::shared_ptr<SimpleQtCryptor::Key> k);
+    bool test_key_zero_s32(std::shared_ptr<SimpleQtCryptor::Key> k);
+    bool test_key_zero_s64(std::shared_ptr<SimpleQtCryptor::Key> k);
+    bool test_rc5_32_encrypt_8b(std::shared_ptr<SimpleQtCryptor::Key> k, const uint8_t* data, int expect);
+    bool test_rc5_64_encrypt_16b(std::shared_ptr<SimpleQtCryptor::Key> k, const uint8_t* data, int expect);
+    bool test_rc5_32_decrypt_8b(std::shared_ptr<SimpleQtCryptor::Key> k, const uint8_t* data, int expect);
+    bool test_rc5_64_decrypt_16b(std::shared_ptr<SimpleQtCryptor::Key> k, const uint8_t* data, int expect);
+    bool test_rc5_32_encrypt_decrypt_8b(std::shared_ptr<SimpleQtCryptor::Key> k, const uint8_t* data);
+    bool test_rc5_64_encrypt_decrypt_16b(std::shared_ptr<SimpleQtCryptor::Key> k, const uint8_t* data);
+    bool test2_CBC_encrypt_decrypt(std::shared_ptr<SimpleQtCryptor::Key> k, const std::vector<uint8_t> &data, SimpleQtCryptor::Algorithm a);
+    bool test2_CFB_encrypt_decrypt(std::shared_ptr<SimpleQtCryptor::Key> k, const std::vector<uint8_t> &data, SimpleQtCryptor::Algorithm a);
+    bool test2_encrypt_decrypt_pieceByPiece(std::shared_ptr<SimpleQtCryptor::Key> k, const std::vector<uint8_t> &data, SimpleQtCryptor::Algorithm a, SimpleQtCryptor::Mode m);
+    bool test3_encrypt_decrypt(std::shared_ptr<SimpleQtCryptor::Key> k, const std::vector<uint8_t> &data, SimpleQtCryptor::Algorithm a, SimpleQtCryptor::Mode m);
+    bool test3_decryptorwiz(std::shared_ptr<SimpleQtCryptor::Key> *kl, int kc, const std::vector<uint8_t> &data, SimpleQtCryptor::Algorithm a, SimpleQtCryptor::Mode m);
 
 // SERPENT TESTS
-    bool test_key_zero_expand_spt(QSharedPointer<SimpleQtCryptor::Key> k);
-    bool test_key_zero_spt(QSharedPointer<SimpleQtCryptor::Key> k);
-    bool test_serpent_encrypt_16b(QSharedPointer<SimpleQtCryptor::Key> k, const uchar* data, int expect);
-    bool test_serpent_decrypt_16b(QSharedPointer<SimpleQtCryptor::Key> k, const uchar* data, int expect);
-    bool test_serpent_encrypt_decrypt_16b(QSharedPointer<SimpleQtCryptor::Key> k, const uchar* data);
+    bool test_key_zero_expand_spt(std::shared_ptr<SimpleQtCryptor::Key> k);
+    bool test_key_zero_spt(std::shared_ptr<SimpleQtCryptor::Key> k);
+    bool test_serpent_encrypt_16b(std::shared_ptr<SimpleQtCryptor::Key> k, const uint8_t* data, int expect);
+    bool test_serpent_decrypt_16b(std::shared_ptr<SimpleQtCryptor::Key> k, const uint8_t* data, int expect);
+    bool test_serpent_encrypt_decrypt_16b(std::shared_ptr<SimpleQtCryptor::Key> k, const uint8_t* data);
 
 };
 
