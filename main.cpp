@@ -20,6 +20,7 @@
 #include "simpleqtcryptor.h"
 #include "simpleqtcryptor_test.h"
 
+#include <cstring>
 #include <fstream>
 #include <iostream>
 #include <memory>
@@ -101,11 +102,11 @@ int main(int argc, char *argv[]) {
     if ( 1 == argc ) {
         goto failandprint;
     }
-    if ( !qstrcmp("-e", argv[1]) ) {
+    if ( !std::strcmp("-e", argv[1]) ) {
         cmdCommand = 'e';
-    } else if ( !qstrcmp("-d", argv[1]) ) {
+    } else if ( !std::strcmp("-d", argv[1]) ) {
         cmdCommand = 'd';
-    } else if ( !qstrcmp("-t", argv[1]) ) {
+    } else if ( !std::strcmp("-t", argv[1]) ) {
         cmdCommand = 't';
         if ( 3 != argc ) {
             goto failandprint;
@@ -113,37 +114,37 @@ int main(int argc, char *argv[]) {
             cmdInfile = argv[2];
             aCtr++;
         }
-    } else if ( !qstrcmp("-b", argv[1]) ) {
+    } else if ( !std::strcmp("-b", argv[1]) ) {
         cmdCommand = 'b';
         if ( 5 != argc ) {
             goto failandprint;
         }
-        if ( !qstrcmp("e", argv[2]) ) {
+        if ( !std::strcmp("e", argv[2]) ) {
             benchEncrypt = true;
-        } else if ( !qstrcmp("d", argv[2]) ) {
+        } else if ( !std::strcmp("d", argv[2]) ) {
             benchEncrypt = false;
         } else {
             goto failandprint;
         }
-        if ( !qstrcmp("rc532", argv[3]) ) {
+        if ( !std::strcmp("rc532", argv[3]) ) {
             cmdAlgorithm = SimpleQtCryptor::RC5_32_32_20;
-        } else if ( !qstrcmp("rc564", argv[3]) ) {
+        } else if ( !std::strcmp("rc564", argv[3]) ) {
             cmdAlgorithm = SimpleQtCryptor::RC5_64_32_20;
-        } else if ( !qstrcmp("spt", argv[3]) ) {
+        } else if ( !std::strcmp("spt", argv[3]) ) {
             cmdAlgorithm = SimpleQtCryptor::SERPENT_32;
         } else {
             goto failandprint;
         }
-        benchMegabytes = QString(argv[4]).toInt();
+        benchMegabytes = atoi(argv[4]);
         if ( ! ( 0 < benchMegabytes && benchMegabytes < 1000 ) ) {
             goto failandprint;
         }
         aCtr = 5;
-    } else if ( !qstrcmp("-h", argv[1]) ) {
+    } else if ( !std::strcmp("-h", argv[1]) ) {
         printUsage();
         goto success;
 #ifdef WITH_SERPENT_PRINT_SBOX_H
-    } else if ( !qstrcmp("-serpent-sbox-h", argv[1]) ) {
+    } else if ( !std::strcmp("-serpent-sbox-h", argv[1]) ) {
         SimpleQtCryptor::serpent_print_sbox_h();
         return 0;
 #endif
@@ -152,59 +153,59 @@ int main(int argc, char *argv[]) {
     }
 
     while (aCtr < argc) {
-        if ( !qstrcmp("-k", argv[aCtr]) ) {
+        if ( !std::strcmp("-k", argv[aCtr]) ) {
             aCtr++;
             if (aCtr >= argc) {
                 goto failandprint;
             }
             cmdSecretFile = argv[aCtr];
-        } else if ( !qstrcmp("-p", argv[aCtr]) ) {
+        } else if ( !std::strcmp("-p", argv[aCtr]) ) {
             aCtr++;
             if (aCtr >= argc) {
                 goto failandprint;
             }
             cmdSecret = argv[aCtr];
-        } else if ( !qstrcmp("-i", argv[aCtr]) ) {
+        } else if ( !std::strcmp("-i", argv[aCtr]) ) {
             aCtr++;
             if (aCtr >= argc) {
                 goto failandprint;
             }
             cmdInfile = argv[aCtr];
-        } else if ( !qstrcmp("-o", argv[aCtr]) ) {
+        } else if ( !std::strcmp("-o", argv[aCtr]) ) {
             aCtr++;
             if (aCtr >= argc) {
                 goto failandprint;
             }
             cmdOutfile = argv[aCtr];
-        } else if ( !qstrcmp("-spt", argv[aCtr]) ) {
+        } else if ( !std::strcmp("-spt", argv[aCtr]) ) {
             if ( cmdAlgorithm != SimpleQtCryptor::NoAlgorithm )
                 goto failandprint;
             cmdAlgorithm = SimpleQtCryptor::SERPENT_32;
-        } else if ( !qstrcmp("-rc532", argv[aCtr]) ) {
+        } else if ( !std::strcmp("-rc532", argv[aCtr]) ) {
             if ( cmdAlgorithm != SimpleQtCryptor::NoAlgorithm )
                 goto failandprint;
             cmdAlgorithm = SimpleQtCryptor::RC5_32_32_20;
-        } else if ( !qstrcmp("-rc564", argv[aCtr]) ) {
+        } else if ( !std::strcmp("-rc564", argv[aCtr]) ) {
             if ( cmdAlgorithm != SimpleQtCryptor::NoAlgorithm )
                 goto failandprint;
             cmdAlgorithm = SimpleQtCryptor::RC5_64_32_20;
-        } else if ( !qstrcmp("-rc5", argv[aCtr]) ) {
+        } else if ( !std::strcmp("-rc5", argv[aCtr]) ) {
             if ( cmdAlgorithm != SimpleQtCryptor::NoAlgorithm )
                 goto failandprint;
             cmdAlgorithm = SimpleQtCryptor::Info::fastRC5();
-        } else if ( !qstrcmp("-cbc", argv[aCtr]) ) {
+        } else if ( !std::strcmp("-cbc", argv[aCtr]) ) {
             cmdMode = SimpleQtCryptor::ModeCBC;
-        } else if ( !qstrcmp("-cfb", argv[aCtr]) ) {
+        } else if ( !std::strcmp("-cfb", argv[aCtr]) ) {
             cmdMode = SimpleQtCryptor::ModeCFB;
-        } else if ( !qstrcmp("-n", argv[aCtr]) ) {
+        } else if ( !std::strcmp("-n", argv[aCtr]) ) {
             cmdHeader = false;
-        } else if ( !qstrcmp("-v", argv[aCtr]) ) {
+        } else if ( !std::strcmp("-v", argv[aCtr]) ) {
             cmdVerbose = true;
             printVersion();
         } else {
-            myStderr->write("Unrecognised argument: ");
-            myStderr->write(argv[aCtr]);
-            myStderr->write("\n");
+            *myStderr << ("Unrecognised argument: ");
+            *myStderr << (argv[aCtr]);
+            *myStderr << ("\n");
             goto failandprint;
         }
         aCtr++;
@@ -232,29 +233,30 @@ int main(int argc, char *argv[]) {
     if (!ok) goto failure;
 
 success:
-    if (myIn) myIn->close();
-    if (myOut) myOut->close();
-    myStderr->close();
+    // if (myIn) myIn->close;
+    // if (myOut) myOut->close();
+    // myStderr->close();
     return 0;
 failandprint:
     printUsage();
 failure:
-    if (myIn) myIn->close();
-    if (myOut) myOut->close();
-    myStderr->close();
+    // if (myIn) myIn->close();
+    // if (myOut) myOut->close();
+    // myStderr->close();
     return 1;
 }
 
 bool prepare() {
     if ( 0 == cmdSecret && 0 == cmdSecretFile ) {
-        if (cmdVerbose) myStderr->write("Using empty Secret\n");
+        if (cmdVerbose) *myStderr << ("Using empty Secret\n");
         gKey = std::make_shared<SimpleQtCryptor::Key>(std::string(""));
     } else if ( 0 != cmdSecret && 0 != cmdSecretFile ) {
         *myStderr << ("Error: use either -k or -p\n");
     } else if ( 0 != cmdSecret ) {
+        std::cout << cmdSecret << std::endl;
         gKey = std::make_shared<SimpleQtCryptor::Key>(std::string(cmdSecret));
     } else {
-        std::ifstream kfile(cmdSecretFile);
+        std::ifstream kfile(cmdSecretFile, std::ios_base::binary);
         if (!kfile.is_open()) {
             *myStderr << ("failed to open secret file ");
             *myStderr << (cmdSecretFile);
@@ -265,45 +267,44 @@ bool prepare() {
         std::vector<uint8_t> k;
         if (!kfile.eof()) {
             kfile.seekg(0, std::ios_base::end);
-            std::streampos fileSize = file.tellg();
+            std::streampos fileSize = kfile.tellg();
             k.resize(fileSize);
 
-            file.seekg(0, std::ios_base::beg);
-            file.read(&k[0], fileSize);
+            kfile.seekg(0, std::ios_base::beg);
+            kfile.read(reinterpret_cast<char*>(&k[0]), fileSize);
         }
         gKey = std::make_shared<SimpleQtCryptor::Key>(k);
         if (cmdVerbose) {
-            myStderr->write("using contents of  ");
-            myStderr->write(cmdSecretFile);
-            myStderr->write(" as encryption key\n");
+            *myStderr << ("using contents of  ");
+            *myStderr << (cmdSecretFile);
+            *myStderr << (" as encryption key\n");
         }
     }
 
     if ( 0 == cmdInfile ) {
         myIn = &std::cin;
     } else {
-        myIn = new QFile(QString::fromAscii(cmdInfile));
-        if ( ! myIn->open(QIODevice::ReadOnly) ) {
+        myIn = new std::ifstream(cmdInfile, std::ios_base::binary);
+        if ( ! *myIn ) {
             delete myIn;
             myIn = 0;
-            myStderr->write("Failed to open Input File ");
-            myStderr->write(cmdInfile);
-            myStderr->write("\n");
+            *myStderr << ("Failed to open Input File ");
+            *myStderr << (cmdInfile);
+            *myStderr << ("\n");
             return false;
         }
     }
 
     if ( 0 == cmdOutfile ) {
-        myOut = new QFile(0);
-        myOut->open(1, QIODevice::WriteOnly);
+        myOut = &std::cout;
     } else {
-        myOut = new QFile(QString::fromAscii(cmdOutfile));
-        if ( ! myOut->open(QIODevice::WriteOnly) ) {
+        myOut = new std::ofstream(cmdOutfile, std::ios_base::binary);
+        if ( ! *myOut ) {
             delete myOut;
             myOut = 0;
-            myStderr->write("Failed to open Output File ");
-            myStderr->write(cmdOutfile);
-            myStderr->write("\n");
+            *myStderr << ("Failed to open Output File ");
+            *myStderr << (cmdOutfile);
+            *myStderr << ("\n");
             return false;
         }
     }
@@ -312,29 +313,36 @@ bool prepare() {
 }
 
 bool test() {
-    QString testfilename(cmdInfile);
-    QFile testfile(testfilename);
-    if ( ! testfile.open(QIODevice::ReadOnly) ) {
-         myStderr->write("Can not open testfile ");
-         myStderr->write(testfilename.toAscii());
-         myStderr->write("\n");
+    std::string testfilename(cmdInfile);
+    std::ifstream testfile(testfilename, std::ios_base::binary);
+    if ( ! testfile ) {
+         *myStderr << ("Can not open testfile ");
+         *myStderr << (testfilename);
+         *myStderr << ("\n");
         return false;
     }
 
-    QByteArray testdata = testfile.readAll();
-    testfile.close();
+    std::vector<uint8_t> testdata;
+    if (!testfile.eof()) {
+        testfile.seekg(0, std::ios_base::end);
+        std::streampos fileSize = testfile.tellg();
+        testdata.resize(fileSize);
+
+        testfile.seekg(0, std::ios_base::beg);
+        testfile.read(reinterpret_cast<char*>(&testdata[0]), fileSize);
+    }
 
     SimpleQtCryptor::SelfTest st;
     return st.test(testdata, myStderr);
 }
 
 bool benchmark() {
-    myStderr->write("Benchmarking...");
+    *myStderr << ("Benchmarking...");
     int i;
     SimpleQtCryptor::Key *k = new SimpleQtCryptor::Key();
     if ( cmdAlgorithm == SimpleQtCryptor::RC5_32_32_20 ) {
-        quint32 X1 = 0;
-        quint32 X2 = 0;
+        uint32_t X1 = 0;
+        uint32_t X2 = 0;
         k->expandKeyRc532();
         i = benchMegabytes * 128000;
         if ( benchEncrypt ) while ( i-- ) {
@@ -343,8 +351,8 @@ bool benchmark() {
             SimpleQtCryptor::rc5_32_decrypt_2w(X1, X2, k->s32);
         }
     } else if ( cmdAlgorithm == SimpleQtCryptor::RC5_64_32_20 ) {
-        quint64 X1 = 0;
-        quint64 X2 = 0;
+        uint64_t X1 = 0;
+        uint64_t X2 = 0;
         k->expandKeyRc564();
         i = benchMegabytes * 64000;
         if ( benchEncrypt ) while ( i-- ) {
@@ -353,10 +361,10 @@ bool benchmark() {
             SimpleQtCryptor::rc5_64_decrypt_2w(X1, X2, k->s64);
         }
     } else if ( cmdAlgorithm == SimpleQtCryptor::SERPENT_32 ) {
-        quint32 X1 = 0;
-        quint32 X2 = 0;
-        quint32 X3 = 0;
-        quint32 X4 = 0;
+        uint32_t X1 = 0;
+        uint32_t X2 = 0;
+        uint32_t X3 = 0;
+        uint32_t X4 = 0;
         k->expandKeySerpent();
         i = benchMegabytes * 64000;
         if ( benchEncrypt ) while ( i-- ) {
@@ -365,7 +373,7 @@ bool benchmark() {
             SimpleQtCryptor::serpent_decrypt_4w(X1, X2, X3, X4, k->serpent);
         }
     }
-    myStderr->write("...done");
+    *myStderr << ("...done");
     delete k;
     return true;
 }
@@ -377,25 +385,25 @@ bool encrypt() {
     if ( cmdAlgorithm == SimpleQtCryptor::NoAlgorithm ) {
         cmdAlgorithm = SimpleQtCryptor::Info::fastRC5();
         if (cmdVerbose) {
-            myStderr->write("Defaulting to fastest algorithm for this machine\n");
+            *myStderr << ("Defaulting to fastest algorithm for this machine\n");
         }
     }
     if ( cmdMode == SimpleQtCryptor::NoMode ) {
         cmdMode = SimpleQtCryptor::ModeCFB;
         if (cmdVerbose) {
-            myStderr->write("Defaulting to CFB mode\n");
+            *myStderr << ("Defaulting to CFB mode\n");
         }
     }
 
     if ( cmdHeader ) {
         if (cmdVerbose) {
-            myStderr->write("A little (encrypted) header is written to the file making\n");
-            myStderr->write("  it possible to decrypt it without parameters\n");
+            *myStderr << ("A little (encrypted) header is written to the file making\n");
+            *myStderr << ("  it possible to decrypt it without parameters\n");
         }
         enc = new SimpleQtCryptor::Encryptor(gKey, cmdAlgorithm, cmdMode, SimpleQtCryptor::NoChecksum);
     } else {
         if (cmdVerbose) {
-            myStderr->write("No header is written to this file. Remember your parameters!\n");
+            *myStderr << ("No header is written to this file. Remember your parameters!\n");
         }
         if ( SimpleQtCryptor::ModeCBC == cmdMode ) {
             mox = new SimpleQtCryptor::CBC(gKey, cmdAlgorithm);
@@ -406,35 +414,38 @@ bool encrypt() {
 
     myStderr->flush();
 
-    QByteArray indata;
-    QByteArray cipher;
+    std::vector<uint8_t> indata(512000);
+    std::vector<uint8_t> cipher;
     SimpleQtCryptor::Error er = SimpleQtCryptor::NoError;
     do {
-        indata = myIn->read(512000);
+        //indata = myIn->read(512000);
+        indata.resize(512000);
+        myIn->read(reinterpret_cast<char*>(&indata[0]), 512000);
+        indata.resize(myIn->gcount());
         if ( cmdHeader ) {
-            er = enc->encrypt(indata, cipher, indata.isEmpty());
+            er = enc->encrypt(indata, cipher, indata.empty());
         } else {
-            cipher = mox->encrypt(indata, indata.isEmpty());
+            cipher = mox->encrypt(indata, indata.empty());
         }
         if (SimpleQtCryptor::NoError != er) {
-            myStderr->write("Encryption error (very unexpected)\n");
+            *myStderr << ("Encryption error (very unexpected)\n");
             return false;
         }
-        myOut->write(cipher);
+        myOut->write(reinterpret_cast<char*>(&cipher[0]), cipher.size());
         myOut->flush();
         cipher.clear();
-    } while ( !indata.isEmpty() );
+    } while ( !indata.empty() );
     delete mox;
     delete enc;
-    if (QFile::NoError != myIn->error()) {
-        myStderr->write("ERROR reading indata\n");
+    if (myIn->fail()) {
+        *myStderr << ("ERROR reading indata\n");
         return false;
     }
     return true;
 }
 
 bool decrypt() {
-    QSharedPointer<SimpleQtCryptor::Decryptor> dec;
+    std::shared_ptr<SimpleQtCryptor::Decryptor> dec;
     SimpleQtCryptor::DecryptorWizard *dew = 0;
     SimpleQtCryptor::LayerMode *mox = 0;
 
@@ -442,23 +453,23 @@ bool decrypt() {
         if (cmdHeader) {
             cmdAlgorithm = SimpleQtCryptor::DetectAlgorithm;
             if (cmdVerbose) {
-                myStderr->write("Defaulting to automatically detect algorithm\n");
+                *myStderr << ("Defaulting to automatically detect algorithm\n");
             }
         } else {
             cmdAlgorithm = SimpleQtCryptor::Info::fastRC5();
             if (cmdVerbose) {
-                myStderr->write("Defaulting to fastest algorithm for this machine\n");
+                *myStderr << ("Defaulting to fastest algorithm for this machine\n");
             }
         }
     }
     if ( cmdMode == SimpleQtCryptor::NoMode ) {
         if (!cmdHeader) {
             cmdMode = SimpleQtCryptor::ModeCFB;
-            myStderr->write("Defaulting to CFB mode\n");
+            *myStderr << ("Defaulting to CFB mode\n");
         } else {
             cmdMode = SimpleQtCryptor::DetectMode;
             if (cmdVerbose) {
-                myStderr->write("Defaulting to automatically detect mode\n");
+                *myStderr  << ("Defaulting to automatically detect mode\n");
             }
         }
     }
@@ -475,32 +486,36 @@ bool decrypt() {
 
     myStderr->flush();
 
-    QByteArray indata;
-    QByteArray plain;
+    std::vector<uint8_t> indata(512000);
+    std::vector<uint8_t> plain;
     SimpleQtCryptor::Error er = SimpleQtCryptor::NoError;
     do {
-        indata = myIn->read(512000);
+        //indata = myIn->read(512000);
+        indata.resize(512000);
+        myIn->read(reinterpret_cast<char*>(&indata[0]), 512000);
+        indata.resize(myIn->gcount());
         if ( cmdHeader ) {
-            if (dec.isNull()) {
-                er = dew->decrypt(indata, plain, dec, indata.isEmpty());
+            if (!dec) {
+                er = dew->decrypt(indata, plain, dec, indata.empty());
+                std::cout << "Using wizard" << std::endl;
             } else {
-                er = dec->decrypt(indata, plain, indata.isEmpty());
+                er = dec->decrypt(indata, plain, indata.empty());
             }
         } else {
-            plain = mox->decrypt(indata, myIn->atEnd());
+            plain = mox->decrypt(indata, myIn->eof());
         }
         if (SimpleQtCryptor::NoError != er) {
-            myStderr->write("Decryption error: ");
-            myStderr->write(SimpleQtCryptor::Info::errorText(er).toAscii().data());
-            myStderr->write("\n");
+            *myStderr << ("Decryption error: ");
+            *myStderr << (SimpleQtCryptor::Info::errorText(er));
+            *myStderr << ("\n");
             return false;
         }
-        myOut->write(plain);
+        myOut->write(reinterpret_cast<char*>(&plain[0]), plain.size());
         myOut->flush();
         plain.clear();
-    } while ( ! indata.isEmpty() );
-    if (QFile::NoError != myIn->error()) {
-        myStderr->write("ERROR reading indata\n");
+    } while ( ! indata.empty() );
+    if (myIn->fail()) {
+        *myStderr << ("ERROR reading indata\n");
         return false;
     }
     return true;
